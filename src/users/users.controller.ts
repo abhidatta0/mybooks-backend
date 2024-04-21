@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException, Res} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ConfigService } from '@nestjs/config';
+import { LoginUserDto } from './dto/login-user.dto';
+import { Response } from 'express';
 
 @Controller('users')
 export class UsersController {
@@ -15,14 +17,22 @@ export class UsersController {
     return {success: true};
   }
 
+  @Post('login')
+  async login(@Body() loginUserDto: LoginUserDto, @Res({passthrough: true}) response: Response){
+    try{
+      const data = await this.usersService.login(loginUserDto);
+      delete data.password;
+      const accessToken = await this.getAccessToken(data.id);
+      response.cookie("access-token",accessToken,{httpOnly: true});
+      return data;
+    }catch(e){
+      throw  new BadRequestException("Invalid credentials");
+    }
+  }
+
   @Get()
   findAll() {
     return this.usersService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
   }
 
   @Patch(':id')
@@ -37,6 +47,8 @@ export class UsersController {
 
   private getAccessToken(userId: number){
     const payload = {sub: userId};
-    return this.jwtService.signAsync(payload,{secret: this.configService.get("JWT_ACCESS_TOKEN_SECRET")});
+    return this.jwtService.sign(payload,{secret: this.configService.get("JWT_ACCESS_TOKEN_SECRET"),
+    expiresIn: '3d'
+    });
   }
 }
