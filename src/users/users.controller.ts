@@ -7,6 +7,7 @@ import { ConfigService } from '@nestjs/config';
 import { LoginUserDto } from './dto/login-user.dto';
 import { Response } from 'express';
 import { Public } from 'src/auth/public.decorator';
+import { CustomBadRequestException } from 'src/common/exceptions/CustomBadRequestException';
 
 @Controller('users')
 export class UsersController {
@@ -29,7 +30,7 @@ export class UsersController {
       response.cookie("access-token",accessToken,{httpOnly: true});
       return data;
     }catch(e){
-      throw  new BadRequestException("Invalid credentials");
+      throw  new CustomBadRequestException("Invalid credentials");
     }
   }
 
