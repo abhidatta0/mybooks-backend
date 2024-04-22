@@ -6,18 +6,21 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ConfigService } from '@nestjs/config';
 import { LoginUserDto } from './dto/login-user.dto';
 import { Response } from 'express';
+import { Public } from 'src/auth/public.decorator';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService, private readonly jwtService: JwtService, private readonly configService: ConfigService) {}
 
   @Post()
+  @Public()
   async create(@Body() createUserDto: CreateUserDto) {
     await this.usersService.create(createUserDto);
     return {success: true};
   }
 
   @Post('login')
+  @Public()
   async login(@Body() loginUserDto: LoginUserDto, @Res({passthrough: true}) response: Response){
     try{
       const data = await this.usersService.login(loginUserDto);
