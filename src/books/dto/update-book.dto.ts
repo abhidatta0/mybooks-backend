@@ -1,4 +1,6 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateBookDto } from './create-book.dto';
+import { Min } from 'class-validator';
 
-export class UpdateBookDto extends PartialType(CreateBookDto) {}
+export class UpdateBookDto  {
+    @Min(1)
+    number_of_pages_read: number;
+}

@@ -4,6 +4,7 @@ import { UpdateBookDto } from './dto/update-book.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Book } from './entities/book.entity';
 import { Repository } from 'typeorm';
+import { CustomBadRequestException } from 'src/common/exceptions/CustomBadRequestException';
 
 @Injectable()
 export class BooksService {
@@ -18,11 +19,19 @@ export class BooksService {
   }
 
   findOne(id: number) {
-    return this.bookRepository.findOneOrFail({where: {id}});
+    return this.bookRepository.findOne({where: {id}});
   }
 
-  update(id: number, updateBookDto: UpdateBookDto) {
-    return `This action updates a #${id} book`;
+  async update(id: number, updateBookDto: UpdateBookDto) {
+    const book = await this.findOne(id);
+    if(!book){
+      throw new CustomBadRequestException("This book doesnot exist!");
+    }
+    if(book.total_number_of_pages <= updateBookDto.number_of_pages_read){
+      throw new CustomBadRequestException("This action is invalid");
+    }
+    await this.bookRepository.update({id} ,updateBookDto );
+    return this.findOne(id);
   }
 
   remove(id: number) {
