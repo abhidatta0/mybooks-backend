@@ -13,12 +13,12 @@ export class BooksService {
     return this.bookRepository.save(createBookDto);
   }
 
-  findAll() {
-    return `This action returns all books`;
+  findAll(userId: number) {
+    return this.bookRepository.find({where: {user_id: userId}});
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} book`;
+    return this.bookRepository.findOneOrFail({where: {id}});
   }
 
   update(id: number, updateBookDto: UpdateBookDto) {
@@ -26,6 +26,7 @@ export class BooksService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} book`;
+    return this.bookRepository.delete({id});
+
   }
 }
