@@ -14,6 +14,14 @@ export class UsersService {
   constructor(@InjectRepository(User) private readonly userRepository: Repository<User>){}
 
   async create(createUserDto: CreateUserDto) {
+    const checkifEmailIdExists = await this.findOne(createUserDto.email);
+    if(checkifEmailIdExists){
+      throw new CustomBadRequestException("User with this same email id exists!");
+    }
+    const checkifUsernameExists = await this.findOneByUserName(createUserDto.username);
+    if(checkifUsernameExists){
+      throw new CustomBadRequestException("Username taken");
+    }
     const unhashedPassword  = createUserDto.password;
     const hashedPassword = await this.hashedPassword(unhashedPassword);
     createUserDto.password = hashedPassword;
