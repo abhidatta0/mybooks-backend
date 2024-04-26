@@ -1,25 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Book } from './entities/book.entity';
-import { Repository } from 'typeorm';
 import { CustomBadRequestException } from 'src/common/exceptions/CustomBadRequestException';
+import { BooksRepository } from './books.repository';
 
 @Injectable()
-export class BooksService {
-  constructor(@InjectRepository(Book) private readonly bookRepository: Repository<Book>){}
+export class BooksService{
+  constructor(private readonly bookRepository: BooksRepository){}
 
   create(createBookDto: CreateBookDto) {
-    return this.bookRepository.save(createBookDto);
+    return this.bookRepository.create(createBookDto);
   }
 
   findAll(userId: number) {
-    return this.bookRepository.find({where: {user_id: userId}});
+    return this.bookRepository.findAll({user_id: userId});
   }
 
   findOne(id: number) {
-    return this.bookRepository.findOne({where: {id}});
+    return this.bookRepository.findOneWhere({id});
   }
 
   async update(id: number, updateBookDto: UpdateBookDto) {
