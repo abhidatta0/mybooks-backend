@@ -7,11 +7,12 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LoginUserDto } from './dto/login-user.dto';
 import { CustomBadRequestException } from 'src/common/exceptions/CustomBadRequestException';
+import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
   saltOrRounds = 10;
-  constructor(@InjectRepository(User) private readonly userRepository: Repository<User>){}
+  constructor(private readonly userRepository: UsersRepository){}
 
   async create(createUserDto: CreateUserDto) {
     const checkifEmailIdExists = await this.findOne(createUserDto.email);
@@ -25,7 +26,7 @@ export class UsersService {
     const unhashedPassword  = createUserDto.password;
     const hashedPassword = await this.hashedPassword(unhashedPassword);
     createUserDto.password = hashedPassword;
-    return this.userRepository.save(createUserDto);
+    return this.userRepository.create(createUserDto);
   }
 
   async login(loginUserDto: LoginUserDto){
@@ -45,27 +46,20 @@ export class UsersService {
   }
 
   findOne(email: string) {
-    return this.userRepository.findOne({
-      where:{
-        email
-      },
-      
-    });
+    return this.userRepository.findOneWhere({
+        email,
+      });
   }
 
   findOneById(id: number) {
-    return this.userRepository.findOne({
-      where:{
+    return this.userRepository.findOneWhere({
         id
-      },
     });
   }
 
   findOneByUserName(username:string) {
-    return this.userRepository.findOne({
-      where:{
-        username,
-      },
+    return this.userRepository.findOneWhere({
+      username,
     });
   }
 
