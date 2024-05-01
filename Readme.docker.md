@@ -1,4 +1,4 @@
-Tutorial: https://www.youtube.com/watch?v=RBpDLP9ZoCk 
+Tutorial: https://www.youtube.com/watch?v=MM4viHa7k4w 
 Connection issue: https://stackoverflow.com/questions/46749817/cloud-sql-instance-connection-working-locally-but-not-on-app-engine 
 
 GCP official guide: https://cloud.google.com/sql/docs/mysql/connect-run
