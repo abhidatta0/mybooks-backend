@@ -8,6 +8,7 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { LoggerInterceptor } from './common/interceptors/logging.interceptor';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [ConfigModule.forRoot({isGlobal: true}),JwtModule.register({global: true}) ,
@@ -21,7 +22,8 @@ import { LoggerInterceptor } from './common/interceptors/logging.interceptor';
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
-  ]
+  ],
+  controllers:[AppController]
 })
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {
