@@ -9,3 +9,5 @@ docker buildx build --platform linux/amd64 -t mybooks-backend -f Dockerfile.prod
 ```
 docker tag mybooks-backend asia-south1-docker.pkg.dev/achiev-backend-prod/mybooks-backend/mybooks-backend
 ```
+
+#### Cloud run actual video: [Here](./assets/cloud%20run%20video.mp4)
