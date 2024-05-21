@@ -28,7 +28,7 @@ export class BooksService{
     if(book.total_number_of_pages <= updateBookDto.number_of_pages_read){
       throw new CustomBadRequestException("This action is invalid");
     }
-    await this.bookRepository.update({id} ,updateBookDto );
+    await this.bookRepository.updateOne({id} ,updateBookDto );
     return this.findOne(id);
   }
 

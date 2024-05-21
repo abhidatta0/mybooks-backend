@@ -72,7 +72,7 @@ export class UsersService {
     if(matchedUsername){
       throw new CustomBadRequestException("Username is already taken.");
     }
-    await this.userRepository.update({id} , updateUserDto);
+    await this.userRepository.updateOne({id} , updateUserDto);
     return this.findOneById(id);
   }
 

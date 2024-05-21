@@ -17,9 +17,15 @@ abstract class AbstractRepository <T extends BaseEntity>{
       return this.repository.findOne({where: criteria});
     }
 
-    async update(criteria: FindOptionsWhere<T>, data: QueryDeepPartialEntity<T>): Promise<T> {
-        await this.repository.update(criteria, data);
-        return this.findOneWhere(criteria);
+    async updateOne(criteria: FindOptionsWhere<T>, data: DeepPartial<T>): Promise<T> {
+        const entity = await this.repository.findOne({ where: criteria });
+        if (!entity) {
+            return null; // No entity found with the given criteria
+        }
+
+        // Update the found entity with the provided data
+        const updatedEntity = this.repository.merge(entity, data);
+        return this.repository.save(updatedEntity);
     }
 
     async delete(criteria: FindOptionsWhere<T>): Promise<DeleteResult> {
