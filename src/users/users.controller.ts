@@ -24,11 +24,11 @@ export class UsersController {
   @Public()
   async login(@Body() loginUserDto: LoginUserDto, @Res({passthrough: true}) response: Response){
     try{
-      const data = await this.usersService.login(loginUserDto);
-      delete data.password;
-      const accessToken = await this.getAccessToken(data.id);
-      response.cookie("access-token",accessToken,{httpOnly: true});
-      return data;
+      const user = await this.usersService.login(loginUserDto);
+      delete user.password;
+      const accessToken = await this.getAccessToken(user.id);
+      response.cookie("access-token",accessToken,{secure: true});
+      return {user};
     }catch(e){
       throw  new CustomBadRequestException("Invalid credentials");
     }

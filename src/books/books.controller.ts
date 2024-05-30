@@ -14,7 +14,7 @@ export class BooksController {
     return this.booksService.create(createBookDto);
   }
 
-  @Get()
+  @Post('my')
   findAll(@Body() userDto: GetBooksByUserDto) {
     return this.booksService.findAll(userDto.user_id);
   }
