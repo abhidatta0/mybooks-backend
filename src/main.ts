@@ -11,7 +11,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({whitelist: true}));
   const httpAdapter = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
-  app.enableCors({credentials: true,origin:["http://localhost:5173"]});
+  app.enableCors({credentials: true,origin:["http://localhost:5173","https://book-haven-web.netlify.app"]});
   await app.listen(3000);
 }
 bootstrap();

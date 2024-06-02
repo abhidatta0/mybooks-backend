@@ -27,7 +27,7 @@ export class UsersController {
       const user = await this.usersService.login(loginUserDto);
       delete user.password;
       const accessToken = await this.getAccessToken(user.id);
-      response.cookie("access-token",accessToken,{secure: true});
+      response.cookie("access-token",accessToken,{secure: true,sameSite:'none'});
       return {user};
     }catch(e){
       throw  new CustomBadRequestException("Invalid credentials");
