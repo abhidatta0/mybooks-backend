@@ -1,4 +1,4 @@
-import { Column, ManyToOne , JoinColumn, Entity} from "typeorm";
+import { Column, ManyToOne , JoinColumn, Entity, Timestamp, BeforeUpdate} from "typeorm";
 import BaseEntity from "src/common/entities/BaseEntity";
 import { User } from "src/users/entities/user.entity";
 
@@ -22,4 +22,12 @@ export class Book extends BaseEntity{
 
    @Column()
    user_id: number;
+
+   @Column({ type: "timestamp", nullable: true})
+   previous_updated: Timestamp;
+
+   @BeforeUpdate()
+    updatePreviousUpdated() {
+      this.previous_updated = this.updated_at;
+    }
 }
