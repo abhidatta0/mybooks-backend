@@ -5,6 +5,14 @@ import { JwtService } from "@nestjs/jwt";
 import { Request } from 'express';
 import { IS_PUBLIC_KEY } from "./public.decorator";
 
+declare global {
+    namespace Express {
+      interface Request {
+        user_id?: number,
+      }
+    }
+}
+
 @Injectable()
 export class AuthGuard implements CanActivate{
     constructor(private jwtService: JwtService, private config: ConfigService, private reflector: Reflector){ }
@@ -28,7 +36,8 @@ export class AuthGuard implements CanActivate{
             throw new UnauthorizedException('Access Denied. No token provided.');
         }
         try{
-            await this.jwtService.verifyAsync(accessToken, {secret: this.config.get('JWT_ACCESS_TOKEN_SECRET')});
+            const data = await this.jwtService.verifyAsync(accessToken, {secret: this.config.get('JWT_ACCESS_TOKEN_SECRET')});
+            request.user_id = data.sub;
         }catch{
             throw new UnauthorizedException('Access Denied. Token invalid'); // 401 response
         }

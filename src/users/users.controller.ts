@@ -8,6 +8,7 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { Response } from 'express';
 import { Public } from 'src/auth/public.decorator';
 import { CustomBadRequestException } from 'src/common/exceptions/CustomBadRequestException';
+import { UserId } from './user-id.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -32,6 +33,17 @@ export class UsersController {
       }};
     }catch(e){
       throw  new CustomBadRequestException("Invalid credentials");
+    }
+  }
+
+  @Post('profile')
+  async profile(@UserId() id: number) {
+    try{
+      const user = await this.usersService.getUserData(id);
+      delete user.password;
+      return user;
+    }catch(e){
+      throw  new CustomBadRequestException("No such user exist! Please register");
     }
   }
 

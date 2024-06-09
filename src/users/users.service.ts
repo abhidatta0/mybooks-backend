@@ -41,6 +41,17 @@ export class UsersService {
     }
   }
 
+
+  async getUserData(user_id: number){
+    try{
+      const user = await this.findOneById(user_id);
+      delete user.password;
+      return user;
+    }catch(e){
+      throw  new Error();
+    }
+  }
+
   findAll() {
     return `This action returns all users`;
   }
